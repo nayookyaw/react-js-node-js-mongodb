@@ -1,3 +1,6 @@
+#   **** Nay Oo Kyaw *** #
+#   ** nayookyaw.nok@gmail.com *** #
+
 version: "3.8"
 services:
   mongodb:
@@ -12,16 +15,22 @@ services:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
       - save_db:/data/db
+      - "/etc/timezone:/etc/timezone:ro" # datetime fix
+      - "/etc/localtime:/etc/localtime:ro" # datetime fix
   backend:
     depends_on:
       - mongodb
     container_name: "backend-server"
-    build: ./backend
+    build: 
+      context: backend
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./.env
+    command: npm run dev # run server
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
+      - NODE_ENV=development
       - DB_HOST=mongodb
       - DB_USER=$MONGODB_USER
       - DB_PASSWORD=$MONGODB_PASSWORD
@@ -29,5 +38,25 @@ services:
       - DB_PORT=$MONGODB_DOCKER_PORT
     stdin_open: true
     tty: true
+    volumes:
+      - "/node-server/node_modules"
+      - "./backend:/node-server" # local path : docker path
+      - "/etc/timezone:/etc/timezone:ro" # datetime fix
+      - "/etc/localtime:/etc/localtime:ro" # datetime fix
+  frontend:
+    container_name: frontend
+    build: 
+      context: frontend
+      dockerfile: Dockerfile
+    stdin_open: true
+    restart: on-failure
+    command: npm start
+    ports:
+      - "3000:3000"
+    volumes:
+      - "/frontend/node_modules"
+      - "./frontend:/frontend"
+      - "/etc/timezone:/etc/timezone:ro" # datetime fix
+      - "/etc/localtime:/etc/localtime:ro" # datetime fix
 volumes:
   save_db:

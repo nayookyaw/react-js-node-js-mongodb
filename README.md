@@ -2,15 +2,22 @@
     Nay Oo Kyaw
     nayookyaw.nok@gmail.com
 
+# Prerequirement
+1. Install Docker (based on your OS)
+2. I installed using below link (for linux because I used Ubuntu)
 
-## How To Run
+https://docs.docker.com/engine/install/ubuntu/
 
-1. 
+# How To Run with Docker
 
-2. Start the Express server:
-```
+1. go to project folder and find 'docker-compose.yml'
+2. run the below command
+
+    $ docker-compose build
+    $ docker-compose up
+
+
 cd server
 npm install
 npm install -g nodemon
 nodemon server
-```
