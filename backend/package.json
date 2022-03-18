@@ -14,6 +14,9 @@
     "mongodb"
   ],
   "author" : "Nay Oo Kyaw",
+  "description" : "This is server repository",
+  "repository" : "https://github.com/nayookyaw/react-js-node-js-mongodb.git",
+  "license": "NOK",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

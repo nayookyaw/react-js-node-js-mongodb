@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   mongodb:
+    container_name: "mongodb-server"
     image: mongo:5.0.2
     restart: unless-stopped
     env_file: ./.env
@@ -11,9 +12,10 @@ services:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
       - save_db:/data/db
-  app:
+  backend:
     depends_on:
       - mongodb
+    container_name: "backend-server"
     build: ./backend
     restart: unless-stopped
     env_file: ./.env
