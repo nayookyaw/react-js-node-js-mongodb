@@ -1,3 +1,8 @@
+/*
+    Developed by Nay Oo Kyaw
+    nayookyaw.nok@gmail.com
+*/
+
 const {
   DB_USER,
   DB_PASSWORD,

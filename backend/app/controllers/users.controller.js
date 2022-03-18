@@ -1,26 +1,32 @@
+/*
+    Developed by Nay Oo Kyaw
+    nayookyaw.nok@gmail.com
+*/
+
 const db = require("../models");
 const User = db.users;
 
 // Create and Save a new User
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.title) {
-    res.status(400).send({ message: "Content can not be empty!" });
+
+  if (!req.body) {
+    res.status(400).json({ message: "Content can not be empty!" });
     return;
   }
 
   // Create a User
-  const User = new User({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published ? req.body.published : false
+  const newUser = new User({
+    name: req.body.name,
+    description: req.body.description ? req.body.description : null
+    // published: req.body.published ? req.body.published : false
   });
 
   // Save User in the database
-  User
-    .save(User)
+  newUser
+    .save(newUser)
     .then(data => {
-      res.send(data);
+      res.status(200).json({ message: "Success", data: data });
     })
     .catch(err => {
       res.status(500).send({

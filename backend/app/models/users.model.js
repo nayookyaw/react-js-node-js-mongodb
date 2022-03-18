@@ -1,3 +1,8 @@
+/*
+    Developed by Nay Oo Kyaw
+    nayookyaw.nok@gmail.com
+*/
+
 module.exports = mongoose => {
   var schema = mongoose.Schema(
     {

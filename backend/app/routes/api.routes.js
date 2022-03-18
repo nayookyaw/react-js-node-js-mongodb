@@ -1,13 +1,23 @@
+/*
+    Developed by Nay Oo Kyaw
+    nayookyaw.nok@gmail.com
+*/
+
 module.exports = app => {
+
   const users = require("../controllers/users.controller.js");
+  const bookings = require("../controllers/bookings.controller");
 
   var router = require("express").Router();
 
-  // Create a new User
-  router.post("/", users.create);
+  // Add new booking
+  router.post("/add/booking", bookings.add);
 
+  // Create a new User
+  router.post("/create", users.create);
+  
   // Retrieve all users
-  router.get("/", users.findAll);
+  router.get("/find", users.findAll);
 
   // Retrieve all published users
   router.get("/published", users.findAllPublished);
@@ -22,7 +32,7 @@ module.exports = app => {
   router.delete("/:id", users.delete);
 
   // Create a new User
-  router.delete("/", users.deleteAll);
+  router.delete("/delete", users.deleteAll);
 
-  app.use("/api/users", router);
+  app.use("/api/", router);
 };
