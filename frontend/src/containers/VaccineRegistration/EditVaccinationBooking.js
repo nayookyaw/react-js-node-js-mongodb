@@ -8,9 +8,13 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import React, { Component } from "react";
+
+import axios from 'axios';
+import {BACKEND_API} from "../../constant/global";
 
 function getVaccineCenter() {
   return [
@@ -22,32 +26,144 @@ function getVaccineCenter() {
   ];
 }
 
-function getBooking() {
-  return {
-    id: 1,
-    name: "Tan Ah Kow",
-    centerName: "Bukit Timah CC",
-    centerId: 3,
-    startTime: new Date("2021-12-01T09:00:00"),
-  };
-}
-
 export class EditVaccineRegistration extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCenter: getBooking.apply().centerId,
-      date: getBooking.apply().startTime,
+      nricNo: "",
+      fullName: "",
+      email: "randomemail@gmail.com",
+      selectedCenter: 0,
+      date: new Date(),
+      errMsg: "",
+      successMsg: "",
+      currentId: "",
     };
+    this.handleNRICNo = this.handleNRICNo.bind(this);
+    this.handleFullName = this.handleFullName.bind(this);
+    this.getBookingDetails = this.getBookingDetails.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.updateBooking = this.updateBooking.bind(this);
+  }
+
+  componentDidMount() {
+    this.getBookingDetails();
+  }
+
+  getBookingDetails () {
+    var id = this.getUrlVars();
+    this.setState({currentId: id});
+
+    if (!id) {
+      return;
+    }
+
+    axios.post(BACKEND_API + `/api/get/booking/detail/` + id , {})
+    .then(res => {
+      if (res.data) {
+        if (res.data.status === "success") {
+          if (res.data.data) {
+            this.setState({ successMsg : res.data.message, errMsg : "" });
+            this.setDetails(res.data.data);
+          } else {
+            this.setState({ successMsg : "", errMsg : "No Data!" });
+          }
+        } else {
+          this.setState({ successMsg : "", errMsg : res.data.message });
+        }          
+      }
+      
+    })
+    .catch(error => {
+      console.log (error);
+      this.setState({ successMsg : "", errMsg : error.message });
+    });
+  }
+
+  getUrlVars() {
+    return window.location.pathname.split("/").pop();
+  }
+
+  setDetails(data) {
+    this.setState({
+      nricNo: data.nric,
+      fullName: data.name,
+      selectedCenter: data.vaccine_center,
+      date: data.slot
+    });
+  }
+
+  handleNRICNo(event) {
+    const state = this.state;
+    this.setState({...state, nricNo: event.target.value});
+  }
+  handleFullName(event) {
+    const state = this.state;
+    this.setState({...state, fullName: event.target.value});
   }
   handleSelect(event) {
-    this.setState({ selectedCenter: event.target.value });
+    const state = this.state;
+    this.setState({ ...state, selectedCenter: event.target.value });
   }
   handleDateChange(value) {
     const state = this.state;
     this.setState({ ...state, date: value });
+  }
+  updateBooking() {
+    this.setState({ errMsg: null, successMsg: null });
+    const state = this.state;
+
+    // validate the input
+    if (state) {
+      if (!state.nricNo) {
+        this.setState({ errMsg: "NRIC Number can not be empty!" });
+        return;
+      } 
+      else if (!state.fullName) {
+        this.setState({ errMsg: "Full Name can not be empty!" });
+        return;
+      }
+      else if (!state.email) {
+        this.setState({ errMsg: "Email can not be empty!" });
+        return;
+      }
+      else if (!state.selectedCenter) {
+        this.setState({ errMsg: "Vaccine Center can not be empty!" });
+        return;
+      }
+      else if (state.date < new Date()) {
+        this.setState({ errMsg: "Only can choose future date time!" });
+        return;
+      }
+      else if (!state.currentId || state.currentId === "") {
+        this.setState({ errMsg: "Current booking id is not valid!" });
+        return;
+      }
+
+      axios.put(BACKEND_API + `/api/update/booking/` + state.currentId , {
+        nric : this.state.nricNo,
+        name : this.state.fullName,
+        email : this.state.email,
+        vaccine_center : this.state.selectedCenter,
+        slot : this.state.date
+      })
+      .then(res => {
+        if (res.data) {
+          if (res.data.status === "success") {
+            this.setState({ successMsg: res.data.message });
+          } else {
+            this.setState({ errMsg: res.data.message });
+          }          
+        }
+        
+      })
+      .catch(error => {
+        console.log (error);
+        this.setState({ errMsg: error.message });
+      });
+      
+    }
   }
   render() {
     return (
@@ -71,7 +187,8 @@ export class EditVaccineRegistration extends Component {
               label="NRIC Number"
               name="NRIC"
               autoComplete="nric"
-              value={getBooking().id}
+              value={this.state.nricNo}
+              onChange={this.handleNRICNo}
               sx={{mb: 2}}
               autoFocus
             />
@@ -80,7 +197,8 @@ export class EditVaccineRegistration extends Component {
               fullWidth
               id="name"
               label="Full Name"
-              value={getBooking().name}
+              value={this.state.fullName}
+              onChange={this.handleFullName}
               sx={{mb: 2}}
               name="name"
               autoComplete="name"
@@ -112,13 +230,23 @@ export class EditVaccineRegistration extends Component {
               required
             />
             <Button
-              type="submit"
+              type="button"
               fullWidth
-              variant="contained"
+              variant="outlined"
               sx={{ mt: 3, mb: 2 }}
+              color="success"
+              onClick={this.updateBooking}
             >
-              Register!
+              Update!
             </Button>
+            { this.state.errMsg ? 
+              <Alert severity="error">{this.state.errMsg}</Alert>
+              : null
+            }
+            { this.state.successMsg ?
+              <Alert severity="success">{this.state.successMsg}</Alert>
+              : null
+            }
           </Box>
         </Container>
       </React.Fragment>

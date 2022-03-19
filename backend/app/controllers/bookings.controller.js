@@ -7,6 +7,21 @@ const mongoose = require('mongoose');
 const db = require("../models");
 const Bookings = db.bookings;
 
+exports.getDetail = async (req, res) => {
+    const id = (req.params.id).trim();
+
+    var isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) {
+        res.status(200).json({ status: "error", message: "Id is not valid format, please check again" });
+        return;
+    }
+
+    const booking = await Bookings.findById(id);
+
+    res.status(200).json({ status: "success", message: "Booking has been retrieved successfully", data: booking });
+    return;
+}
+
 // Retrieve all Users from the database.
 exports.getAll = async (req, res) => {
     const title = req.query.title;

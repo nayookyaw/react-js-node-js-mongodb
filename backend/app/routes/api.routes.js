@@ -10,6 +10,8 @@ module.exports = app => {
 
   var router = require("express").Router();
 
+  // Get booking detail
+  router.post("/get/booking/detail/:id", bookings.getDetail);
   // Get booking list
   router.post("/get/all/booking", bookings.getAll);
   // Add new booking

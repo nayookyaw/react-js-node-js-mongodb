@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import React, { Component } from "react";
 
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
 import {BACKEND_API} from "../../constant/global";
 
 function getVaccineCenter() {
