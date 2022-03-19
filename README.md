@@ -41,8 +41,8 @@ After you installed docker and docker-compose, you are ready to run the project.
 2. open terminal as same path of docker-compose.yml
 3. run the below commands
 
-    $ docker-compose build
-    $ docker-compose up
+    * $ docker-compose build <br>
+    * $ docker-compose up
 
 # See project
 http://localhost:3000
@@ -52,3 +52,6 @@ Congratulations, you can run successfully!
 
 # Github Link
 https://github.com/nayookyaw/react-js-node-js-mongodb
+
+# Manual Guide [Alternative]
+https://docs.google.com/document/d/17QQBUlQhecvzxLysHod9gl35knSIeA5dAU9q8M4zPtA/edit?usp=sharing
