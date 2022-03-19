@@ -6,6 +6,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const errorhandle = require('express-async-errors');
 
 const app = express();
 
@@ -34,10 +35,6 @@ db.mongoose
     process.exit();
   });
 
-// simple route
-// app.get("/", (req, res) => {
-//   res.json({ message: "Welcome to backend server." });
-// });
 
 require("./app/routes/api.routes")(app);
 

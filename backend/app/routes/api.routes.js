@@ -12,6 +12,10 @@ module.exports = app => {
 
   // Add new booking
   router.post("/add/booking", bookings.add);
+  // Update booking
+  router.put("/update/booking/:id", bookings.update);
+  // Delete booking
+  router.delete("/delete/booking/:id", bookings.delete);
 
   // Create a new User
   router.post("/create", users.create);

@@ -2,6 +2,7 @@
     Developed by Nay Oo Kyaw
     nayookyaw.nok@gmail.com
 */
+const mongoose = require('mongoose');
 
 const db = require("../models");
 const Bookings = db.bookings;
@@ -10,22 +11,23 @@ const Bookings = db.bookings;
 exports.add = async (req, res) => {
     var input = req.body;
     if (!input) {
-        res.status(400).json({ message: "Content can not be empty!" });
+        res.status(200).json({ status: "error", message: "Content can not be empty!" });
         return;
     }
 
     // Validate input
     var isValid = validateInput(input);
     if (isValid != false) {
-        res.status(400).json({ message: isValid });
+        res.status(200).json({ status: "error", message: isValid });
         return;
     }
 
+    // Check whether user is existing or not
     var existingUser = await getUserByNric(input.nric);
     console.log (existingUser);
 
     if (existingUser) {
-        res.status(400).json({ message: "User is already exist!" });
+        res.status(200).json({ status: "error", message: "User is already exist!" });
         return;
     }
 
@@ -41,18 +43,75 @@ exports.add = async (req, res) => {
     });
 
     // Save booking in the database
-    newBooking
-        .save(newBooking)
-        .then(data => {
-            res.status(200).json({ message: "Success", data: data });
-        })
-        .catch(err => {
-        res.status(500).send({
-            message:
-            err.message || "Some error occurred while creating the User."
-        });
-    });
+    var newBook = await newBooking.save(newBooking);
+
+    res.status(200).json({ status: "success", message: "Success", data: newBooking });
+    return;
 };
+
+exports.update = async (req, res) => {
+    var input = req.body;
+    if (!input) {
+        res.status(200).json({ status: "error", message: "Content can not be empty!" });
+        return;
+    }
+
+    // Validate input
+    var isValid = validateInput(input);
+    if (isValid != false) {
+        res.status(200).json({ status: "error", message: isValid });
+        return;
+    }
+
+    const id = (req.params.id).trim();
+
+    var isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) {
+        res.status(200).json({ status: "error", message: "Id is not valid format, please check again" });
+        return;
+    }
+    
+    const existBooking = await Bookings.findById(id);
+    if (!existBooking) {
+        res.status(200).json({ status: "error", message: "Booking does not exist!" });
+        return;
+    }
+
+    // update booking
+    await Bookings.findByIdAndUpdate(id, input, { useFindAndModify: false });
+
+    res.status(200).json({ status: "success", message: "Booking has been updated successfully", data: {} });
+    return;
+};
+
+exports.delete = async (req, res) => {
+    var input = req.body;
+    if (!input) {
+        res.status(200).json({ status: "error", message: "Content can not be empty!" });
+        return;
+    }
+
+    const id = (req.params.id).trim();
+
+    var isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) {
+        res.status(200).json({ status: "error", message: "Id is not valid format, please check again" });
+        return;
+    }
+
+    const existBooking = await Bookings.findById(id);
+    if (!existBooking) {
+        res.status(200).json({ status: "error", message: "Booking does not exist!" });
+        return;
+    }
+
+    // update booking
+    await Bookings.findByIdAndRemove(id, { useFindAndModify: false });
+
+    res.status(200).json({ status: "success", message: "Booking has been deleted successfully", data: {} });
+    return;
+
+}
 
 function validateInput(input) {
     var errMsg = false;
