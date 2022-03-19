@@ -70,7 +70,7 @@ exports.add = async (req, res) => {
     });
 
     // Save booking in the database
-    // var newBook = await newBooking.save(newBooking);
+    var newBook = await newBooking.save(newBooking);
 
     res.status(200).json({ status: "success", message: "Booking has been added successfully", data: newBooking });
     return;
