@@ -7,6 +7,17 @@ const mongoose = require('mongoose');
 const db = require("../models");
 const Bookings = db.bookings;
 
+// Retrieve all Users from the database.
+exports.getAll = async (req, res) => {
+    const title = req.query.title;
+    var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+
+    const allBooking = await Bookings.find(condition);
+
+    res.status(200).json({ status: "success", message: "Booking list has been retrieved successfully", data: allBooking });
+    return
+};
+
 // Create new booking
 exports.add = async (req, res) => {
     var input = req.body;

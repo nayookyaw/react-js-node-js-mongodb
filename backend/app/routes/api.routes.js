@@ -10,6 +10,8 @@ module.exports = app => {
 
   var router = require("express").Router();
 
+  // Get booking list
+  router.post("/get/all/booking", bookings.getAll);
   // Add new booking
   router.post("/add/booking", bookings.add);
   // Update booking

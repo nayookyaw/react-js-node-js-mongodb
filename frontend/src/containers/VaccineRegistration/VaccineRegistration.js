@@ -14,7 +14,6 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import React, { Component } from "react";
 
 import axios from 'axios';
-
 import {BACKEND_API} from "../../constant/global";
 
 function getVaccineCenter() {
