@@ -27,7 +27,7 @@ exports.add = async (req, res) => {
     console.log (existingUser);
 
     if (existingUser) {
-        res.status(200).json({ status: "error", message: "User is already exist!" });
+        res.status(200).json({ status: "error", message: "User has already booked!" });
         return;
     }
 
@@ -45,7 +45,7 @@ exports.add = async (req, res) => {
     // Save booking in the database
     var newBook = await newBooking.save(newBooking);
 
-    res.status(200).json({ status: "success", message: "Success", data: newBooking });
+    res.status(200).json({ status: "success", message: "Booking has been added successfully", data: newBooking });
     return;
 };
 
