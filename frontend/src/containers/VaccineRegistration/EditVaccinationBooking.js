@@ -248,6 +248,12 @@ export class EditVaccineRegistration extends Component {
               : null
             }
           </Box>
+          <label>
+            <div>Notes:</div>
+            <span>I purposely removed email in update page.</span><br/>
+            <span>I added randomemail as default for that user. (just for privacy).</span><br/>
+            <span>I haven't checked duplicate user in edit page (I did at register page).</span>
+          </label>
         </Container>
       </React.Fragment>
     );

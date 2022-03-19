@@ -205,16 +205,16 @@ export class VaccineRegistration extends Component {
               : null
             }
           </Box>
-
           <label>
             <div>Notes:</div>
             <span>I added new field (email) to send alert notification.</span><br/>
+            <span>To see the email msg, please see from ethereal link.</span><br/>
+            <span>(e.g <a href="https://ethereal.email/message/YjYZLyl.o.muE7PPYjYZM6JrowcPrwcAAAAAAXiL17Yo6IuGcVH6o8lU6hM?tab=header">Preview Email</a>)</span><br/>
             <span>I am aware that I haven't checked the email format validation.</span><br/>
             <span>I manage to validate required for frontend and backend.</span><br/>
             <span>I also validated the slot time, meaningwhile user can't choose past time.</span>
           </label>
         </Container>
-        
       </React.Fragment>
     );
   }

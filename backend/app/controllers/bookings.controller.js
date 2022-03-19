@@ -3,6 +3,7 @@
     nayookyaw.nok@gmail.com
 */
 const mongoose = require('mongoose');
+const sendEmail = require("../services/send.email");
 
 const db = require("../models");
 const Bookings = db.bookings;
@@ -50,7 +51,7 @@ exports.add = async (req, res) => {
 
     // Check whether user is existing or not
     var existingUser = await getUserByNric(input.nric);
-    console.log (existingUser);
+    sendEmail.sendEmail(input.email);
 
     if (existingUser) {
         res.status(200).json({ status: "error", message: "User has already booked!" });
@@ -69,7 +70,7 @@ exports.add = async (req, res) => {
     });
 
     // Save booking in the database
-    var newBook = await newBooking.save(newBooking);
+    // var newBook = await newBooking.save(newBooking);
 
     res.status(200).json({ status: "success", message: "Booking has been added successfully", data: newBooking });
     return;
